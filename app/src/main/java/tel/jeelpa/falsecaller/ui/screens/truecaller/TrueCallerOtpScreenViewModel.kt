@@ -165,6 +165,7 @@ class TrueCallerOtpScreenViewModel(
 
         val response = withContext(Dispatchers.IO) { okHttpClient.newCall(request).execute() }
         val string = response.body!!.string()
+        println("SEND OTP RESPONSE : $string")
         if (!response.isSuccessful) throw IllegalStateException("Request Failed with ${response.code}")
 
         return Json.decodeFromString<SendOtpResponse>(string).also { println("OTP RESPONSE: $it") }
@@ -196,6 +197,7 @@ class TrueCallerOtpScreenViewModel(
 
         val response = withContext(Dispatchers.IO) { okHttpClient.newCall(request).execute() }
         val responseText = response.body!!.string()
+        println("VERIFY OTP RESPONSE : $responseText")
 
         if (!response.isSuccessful) throw IllegalStateException("Request Failed with ${response.code}")
 

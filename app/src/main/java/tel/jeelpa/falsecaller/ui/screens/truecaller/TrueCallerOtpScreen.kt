@@ -76,7 +76,7 @@ fun StatelessTrueCallerOtpScreen(
                         onAction(UiAction.UpdateNumber(it))
                     })
 
-                Button(enabled = uiState.sendOtpResponse == null, onClick = {
+                Button(onClick = {
                     onAction(UiAction.SendOtp(uiState.number))
                 }) {
                     Text("Send OTP")
