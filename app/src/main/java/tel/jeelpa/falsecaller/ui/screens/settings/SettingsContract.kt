@@ -11,9 +11,11 @@ interface SettingsContract {
     data object UiState
 
     sealed interface UiAction {
+        data object NavigateToOtpTokenScreen: UiAction
     }
 
     sealed interface SideEffect {
         data class Toast(val text: String): SideEffect
+        data object NavigateToOtpTokenScreen: SideEffect
     }
 }

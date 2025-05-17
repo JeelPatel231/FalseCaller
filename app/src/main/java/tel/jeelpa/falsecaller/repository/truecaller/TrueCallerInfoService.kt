@@ -11,6 +11,7 @@ import tel.jeelpa.falsecaller.models.PhoneNumber
 import tel.jeelpa.falsecaller.repository.CallerInfoService
 
 class TrueCallerInfoService(
+    private val httpClient: OkHttpClient,
     private val getToken: () -> String,
 ) : CallerInfoService {
     companion object {
@@ -18,7 +19,7 @@ class TrueCallerInfoService(
         const val BASE_URL = "https://search5-noneu.truecaller.com"
     }
 
-    private val client = OkHttpClient.Builder().addInterceptor {
+    private val client = httpClient.newBuilder().addInterceptor {
             val token = getToken()
             val request = it.request()
             val newRequest = request.newBuilder().header("Accept", "application/json")

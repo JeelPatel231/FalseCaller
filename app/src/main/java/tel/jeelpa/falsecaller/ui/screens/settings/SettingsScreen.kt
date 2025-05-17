@@ -4,6 +4,7 @@ import android.content.Context
 import android.preference.Preference
 import android.preference.SwitchPreference
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -15,6 +16,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
@@ -29,10 +31,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
+import com.ramcosta.composedestinations.generated.destinations.TrueCallerOtpScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.getPreferenceFlow
 import me.zhanghai.compose.preference.textFieldPreference
@@ -106,6 +112,14 @@ fun StatelessSettingsScreen(
                     defaultValue = "",
                     textToValue = { it },
                 )
+                item {
+                    ListItem(
+                        modifier = Modifier.clickable {
+                            onAction(UiAction.NavigateToOtpTokenScreen)
+                        },
+                        headlineContent = { Text("Login using OTP") }
+                    )
+                }
             }
         }
     }
@@ -115,7 +129,19 @@ fun StatelessSettingsScreen(
         sideEffect.collect {
             when (it) {
                 is SideEffect.Toast -> Toast.makeText(ctx, it.text, Toast.LENGTH_SHORT).show()
+                SideEffect.NavigateToOtpTokenScreen -> navigator.navigate(TrueCallerOtpScreenDestination)
             }
         }
     }
+}
+
+@Preview
+@Composable
+private fun _preview() {
+    StatelessSettingsScreen(
+        navigator = EmptyDestinationsNavigator,
+        uiState = UiState,
+        sideEffect = emptyFlow(),
+        onAction = {},
+    )
 }

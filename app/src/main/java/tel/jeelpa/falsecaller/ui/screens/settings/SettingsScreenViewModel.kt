@@ -2,6 +2,7 @@ package tel.jeelpa.falsecaller.ui.screens.settings
 
 import androidx.lifecycle.ViewModel
 import tel.jeelpa.falsecaller.mvi.MVI
+import tel.jeelpa.falsecaller.mvi.emitSideEffect
 import tel.jeelpa.falsecaller.mvi.mvi
 import tel.jeelpa.falsecaller.ui.screens.settings.SettingsContract.SideEffect
 import tel.jeelpa.falsecaller.ui.screens.settings.SettingsContract.UiAction
@@ -13,7 +14,7 @@ class SettingsScreenViewModel : ViewModel(),
 
     override fun onAction(uiAction: UiAction) {
         when (uiAction) {
-            else -> error("Unreachable $uiAction")
+            UiAction.NavigateToOtpTokenScreen -> emitSideEffect(SideEffect.NavigateToOtpTokenScreen)
         }
     }
 }
