@@ -1,0 +1,2 @@
+All files in this [core] directory are independent of platform and architecture.
+All classes depend on kotlin stdlib and libraries which are multiplatform.
