@@ -17,11 +17,13 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import tel.jeelpa.falsecaller.constants.Constants
 import tel.jeelpa.falsecaller.mvi.MVI
 import tel.jeelpa.falsecaller.mvi.mvi
 import tel.jeelpa.falsecaller.ui.screens.truecaller.TrueCallerOtpContract.SideEffect
 import tel.jeelpa.falsecaller.ui.screens.truecaller.TrueCallerOtpContract.UiAction
 import tel.jeelpa.falsecaller.ui.screens.truecaller.TrueCallerOtpContract.UiState
+import tel.jeelpa.falsecaller.utils.logCatch
 
 typealias TokenString = String
 
@@ -158,15 +160,16 @@ class TrueCallerOtpScreenViewModel(
             .url(POST_URL)
             .post(postBody.toRequestBody(JSON))
             .addHeader("content-type", "application/json; charset=UTF-8")
-            .addHeader("user-agent", "Truecaller/11.75.5 (Android;10)")
-            .addHeader("clientsecret", "lvc22mp3l1sfv6ujg83rd17btt")
+            .addHeader("user-agent", Constants.Truecaller.UserAgent)
+            .addHeader("clientsecret", Constants.Truecaller.ClientSecret)
             .build()
         println("Sending OTP to $phoneNumber")
 
         val response = withContext(Dispatchers.IO) { okHttpClient.newCall(request).execute() }
+
         val string = response.body!!.string()
-        println("SEND OTP RESPONSE : $string")
-        if (!response.isSuccessful) throw IllegalStateException("Request Failed with ${response.code}")
+        println(string)
+        if (!response.isSuccessful) throw IllegalStateException(string)
 
         return Json.decodeFromString<SendOtpResponse>(string).also { println("OTP RESPONSE: $it") }
     }
@@ -191,15 +194,14 @@ class TrueCallerOtpScreenViewModel(
             .url(POST_URL)
             .post(toString.toRequestBody(JSON))
             .addHeader("content-type", "application/json; charset=UTF-8")
-            .addHeader("user-agent", "Truecaller/11.75.5 (Android;10)")
-            .addHeader("clientsecret", "lvc22mp3l1sfv6ujg83rd17btt")
+            .addHeader("user-agent", Constants.Truecaller.UserAgent)
+            .addHeader("clientsecret", Constants.Truecaller.ClientSecret)
             .build()
 
         val response = withContext(Dispatchers.IO) { okHttpClient.newCall(request).execute() }
         val responseText = response.body!!.string()
-        println("VERIFY OTP RESPONSE : $responseText")
-
-        if (!response.isSuccessful) throw IllegalStateException("Request Failed with ${response.code}")
+        println(responseText)
+        if (!response.isSuccessful) throw IllegalStateException(responseText)
 
         val decoded = Json.decodeFromString<VerifiedResponse>(responseText)
             .also { println("VERIFIED RESPONSE: $it") }
@@ -224,14 +226,14 @@ class TrueCallerOtpScreenViewModel(
             }
 
             is UiAction.SendOtp -> viewModelScope.launch {
-                Either.catch { sendOtp(uiAction.number) }
+                Either.logCatch { sendOtp(uiAction.number) }
                     .onLeft { emitSideEffect(SideEffect.Toast(it.message ?: "Unknown Error")) }
                     .onRight { updateUiState { UiState.sendOtpResponse.set(this, it) } }
             }
 
             is UiAction.VerifyOtp -> viewModelScope.launch {
                 either<Throwable, Unit> {
-                    val token = Either.catch {
+                    val token = Either.logCatch {
                         verifyOtp(
                             uiAction.plainNumber,
                             uiAction.otp,
@@ -240,7 +242,7 @@ class TrueCallerOtpScreenViewModel(
                     }
                         .onLeft { emitSideEffect(SideEffect.Toast(it.message ?: "Error")) }
                         .bind()
-                    Either.catch { saveToken(token) }
+                    Either.logCatch { saveToken(token) }
                         .onLeft { emitSideEffect(SideEffect.Toast(it.message ?: "Error")) }
                         .bind()
                     emitSideEffect(SideEffect.NavigateBack).right()

@@ -9,5 +9,5 @@ import tel.jeelpa.falsecaller.repository.MockCallerInfoService
 
 val OverrideModule = module {
 //    single<CallLogRepo>(named("default")) { MockCallLogRepo() }
-//    single<CallerInfoService> { MockCallerInfoService() }
+    single<CallerInfoService> { MockCallerInfoService() }
 }

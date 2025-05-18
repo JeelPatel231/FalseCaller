@@ -23,6 +23,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -63,7 +64,7 @@ fun SettingsScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StatelessSettingsScreen(
     navigator: DestinationsNavigator,
@@ -77,6 +78,10 @@ fun StatelessSettingsScreen(
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { onAction(UiAction.SetSystemAlertWindowPermission(Settings.canDrawOverlays(ctx))) }
+
+    LaunchedEffect(Unit) {
+        onAction(UiAction.SetSystemAlertWindowPermission(Settings.canDrawOverlays(ctx)))
+    }
 
     Scaffold(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),

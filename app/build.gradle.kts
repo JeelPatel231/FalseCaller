@@ -58,6 +58,13 @@ dependencies {
 
     implementation("com.google.accompanist:accompanist-permissions:0.37.3")
 
+
+//    implementation("androidx.lifecycle:lifecycle-service:2.9.0")
+//    implementation("androidx.savedstate:savedstate-ktx:1.3.0")
+
+//    implementation("androidx.lifecycle:lifecycle-common:2.9.0")
+
+
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // TODO: remove this dependency

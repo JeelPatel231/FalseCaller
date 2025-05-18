@@ -13,6 +13,7 @@ import tel.jeelpa.falsecaller.repository.CallerInfoService
 import tel.jeelpa.falsecaller.repository.EmptyCallLogRepo
 import tel.jeelpa.falsecaller.repository.truecaller.TrueCallerInfoService
 import tel.jeelpa.falsecaller.ui.screens.detail.DetailScreenViewModel
+import tel.jeelpa.falsecaller.ui.screens.floatingwindow.FloatingWindowViewModel
 import tel.jeelpa.falsecaller.ui.screens.home.HomeScreenViewModel
 import tel.jeelpa.falsecaller.ui.screens.settings.SettingsScreenViewModel
 import tel.jeelpa.falsecaller.ui.screens.truecaller.TrueCallerOtpScreenViewModel
@@ -36,4 +37,5 @@ val AppModule = module {
     viewModel { DetailScreenViewModel(get(),get()) }
     viewModel { SettingsScreenViewModel() }
     viewModel { TrueCallerOtpScreenViewModel(get(), get()) }
+    viewModel { FloatingWindowViewModel(get(), get()) }
 }
