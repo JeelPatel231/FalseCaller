@@ -9,12 +9,14 @@ interface SettingsContract {
     @Stable
     @Immutable
     data class UiState(
-        val isSystemAlertWindowGranted: Boolean
+        val isSystemAlertWindowGranted: Boolean,
+        val isPhonePermissionGranted: Boolean,
     ) {
         companion object {
             fun default() : UiState {
                 return UiState(
-                    isSystemAlertWindowGranted = false
+                    isSystemAlertWindowGranted = false,
+                    isPhonePermissionGranted = false,
                 )
             }
         }
@@ -23,6 +25,7 @@ interface SettingsContract {
     sealed interface UiAction {
         data object NavigateToOtpTokenScreen: UiAction
         data class SetSystemAlertWindowPermission(val allowed: Boolean): UiAction
+        data class SetPhonePermission(val allowed: Boolean): UiAction
         data object NavigateToDrawOverOtherAppsPermissionWindow: UiAction
     }
 

@@ -19,6 +19,9 @@ class SettingsScreenViewModel : ViewModel(),
                 UiState.isSystemAlertWindowGranted.set(this, uiAction.allowed)
             }
             UiAction.NavigateToDrawOverOtherAppsPermissionWindow -> emitSideEffect(SideEffect.NavigateToDrawOverOtherAppsPermissionWindow)
+            is UiAction.SetPhonePermission -> updateUiState {
+                UiState.isPhonePermissionGranted.set(this, uiAction.allowed)
+            }
         }
     }
 }

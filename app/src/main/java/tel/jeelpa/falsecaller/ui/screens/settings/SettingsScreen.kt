@@ -32,6 +32,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.generated.destinations.TrueCallerOtpScreenDestination
@@ -64,7 +66,7 @@ fun SettingsScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun StatelessSettingsScreen(
     navigator: DestinationsNavigator,
@@ -74,6 +76,7 @@ fun StatelessSettingsScreen(
     onAction: (UiAction) -> Unit,
 ) {
     val ctx = LocalContext.current
+    val phonePermission = rememberPermissionState(android.Manifest.permission.READ_PHONE_STATE)
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -81,6 +84,9 @@ fun StatelessSettingsScreen(
 
     LaunchedEffect(Unit) {
         onAction(UiAction.SetSystemAlertWindowPermission(Settings.canDrawOverlays(ctx)))
+    }
+    LaunchedEffect(phonePermission.status) {
+        onAction(UiAction.SetPhonePermission(phonePermission.status.isGranted))
     }
 
     Scaffold(
@@ -119,6 +125,7 @@ fun StatelessSettingsScreen(
                 textFieldPreference(
                     key = "TRUECALLER_TOKEN",
                     title = { Text("Truecaller Token") },
+                    summary = { Text("Directly paste TrueCaller's API token fetched from 3rd party.") },
                     defaultValue = "",
                     textToValue = { it },
                 )
@@ -127,6 +134,7 @@ fun StatelessSettingsScreen(
                         modifier = Modifier.clickable {
                             onAction(UiAction.NavigateToOtpTokenScreen)
                         },
+                        supportingContent = { Text("Fetch and save token using (OLD) truecaller OTP flow.") },
                         headlineContent = { Text("Login using OTP") }
                     )
                 }
@@ -136,11 +144,27 @@ fun StatelessSettingsScreen(
                             onAction(UiAction.NavigateToDrawOverOtherAppsPermissionWindow)
                         },
                         headlineContent = { Text("Floating Window Permission") },
+                        supportingContent = { Text("Permission to show a floating window when you receive an incoming call.") },
                         trailingContent = {
                             Switch(
                                 enabled = false,
                                 checked = uiState.isSystemAlertWindowGranted,
-                                onCheckedChange = { })
+                                onCheckedChange = { },
+                            )
+                        }
+                    )
+                }
+                item {
+                    ListItem(
+                        modifier = Modifier.clickable { phonePermission.launchPermissionRequest() },
+                        headlineContent = { Text("Phone Permission") },
+                        supportingContent = { Text("Permission to read live incoming calls to get the number for fetching details.") },
+                        trailingContent = {
+                            Switch(
+                                enabled = false,
+                                checked = uiState.isPhonePermissionGranted,
+                                onCheckedChange = { },
+                            )
                         }
                     )
                 }
