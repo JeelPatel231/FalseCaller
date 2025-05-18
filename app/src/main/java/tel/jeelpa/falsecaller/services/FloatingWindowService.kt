@@ -66,15 +66,13 @@ class OverlayService : Service() {
         composeView = ComposeView(this)
         composeView.setContent {
             FalseCallerTheme {
-                Surface(
+                Card(
                     modifier = Modifier.wrapContentSize()
                 ) {
-                    Card {
-                        FloatingWindowScreen(
-                            modifier = Modifier.padding(16.dp),
-                            number = PhoneNumber(number)
-                        )
-                    }
+                    FloatingWindowScreen(
+                        modifier = Modifier.padding(16.dp),
+                        number = PhoneNumber(number)
+                    )
                 }
             }
         }
