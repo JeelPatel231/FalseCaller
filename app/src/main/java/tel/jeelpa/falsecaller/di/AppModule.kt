@@ -16,7 +16,6 @@ import tel.jeelpa.falsecaller.ui.screens.detail.DetailScreenViewModel
 import tel.jeelpa.falsecaller.ui.screens.floatingwindow.FloatingWindowViewModel
 import tel.jeelpa.falsecaller.ui.screens.home.HomeScreenViewModel
 import tel.jeelpa.falsecaller.ui.screens.settings.SettingsScreenViewModel
-import tel.jeelpa.falsecaller.ui.screens.truecaller.TrueCallerOtpScreenViewModel
 
 val AppModule = module {
     single<OkHttpClient> { OkHttpClient.Builder().build() }
@@ -36,6 +35,5 @@ val AppModule = module {
     viewModel { HomeScreenViewModel(get(named("default")), get(named("empty"))) }
     viewModel { DetailScreenViewModel(get(),get()) }
     viewModel { SettingsScreenViewModel() }
-    viewModel { TrueCallerOtpScreenViewModel(get(), get()) }
     viewModel { FloatingWindowViewModel(get(), get()) }
 }

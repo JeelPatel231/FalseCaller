@@ -36,7 +36,6 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
-import com.ramcosta.composedestinations.generated.destinations.TrueCallerOtpScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import kotlinx.coroutines.flow.Flow
@@ -132,15 +131,6 @@ fun StatelessSettingsScreen(
                 item {
                     ListItem(
                         modifier = Modifier.clickable {
-                            onAction(UiAction.NavigateToOtpTokenScreen)
-                        },
-                        supportingContent = { Text("Fetch and save token using (OLD) truecaller OTP flow.") },
-                        headlineContent = { Text("Login using OTP") }
-                    )
-                }
-                item {
-                    ListItem(
-                        modifier = Modifier.clickable {
                             onAction(UiAction.NavigateToDrawOverOtherAppsPermissionWindow)
                         },
                         headlineContent = { Text("Floating Window Permission") },
@@ -176,10 +166,6 @@ fun StatelessSettingsScreen(
         sideEffect.collect {
             when (it) {
                 is SideEffect.Toast -> Toast.makeText(ctx, it.text, Toast.LENGTH_SHORT).show()
-                SideEffect.NavigateToOtpTokenScreen -> navigator.navigate(
-                    TrueCallerOtpScreenDestination
-                )
-
                 SideEffect.NavigateToDrawOverOtherAppsPermissionWindow -> {
                     launcher.launch(
                         Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)

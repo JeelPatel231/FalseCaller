@@ -23,7 +23,6 @@ interface SettingsContract {
     }
 
     sealed interface UiAction {
-        data object NavigateToOtpTokenScreen: UiAction
         data class SetSystemAlertWindowPermission(val allowed: Boolean): UiAction
         data class SetPhonePermission(val allowed: Boolean): UiAction
         data object NavigateToDrawOverOtherAppsPermissionWindow: UiAction
@@ -31,7 +30,6 @@ interface SettingsContract {
 
     sealed interface SideEffect {
         data class Toast(val text: String): SideEffect
-        data object NavigateToOtpTokenScreen: SideEffect
         data object NavigateToDrawOverOtherAppsPermissionWindow: SideEffect
     }
 }

@@ -14,7 +14,6 @@ class SettingsScreenViewModel : ViewModel(),
 
     override fun onAction(uiAction: UiAction) {
         when (uiAction) {
-            UiAction.NavigateToOtpTokenScreen -> emitSideEffect(SideEffect.NavigateToOtpTokenScreen)
             is UiAction.SetSystemAlertWindowPermission -> updateUiState {
                 UiState.isSystemAlertWindowGranted.set(this, uiAction.allowed)
             }
