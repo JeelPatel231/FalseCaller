@@ -6,16 +6,30 @@ import arrow.optics.optics
 import tel.jeelpa.falsecaller.models.CallLogEntry
 
 interface SettingsContract {
+    @optics
     @Stable
     @Immutable
-    data object UiState
+    data class UiState(
+        val isSystemAlertWindowGranted: Boolean
+    ) {
+        companion object {
+            fun default() : UiState {
+                return UiState(
+                    isSystemAlertWindowGranted = false
+                )
+            }
+        }
+    }
 
     sealed interface UiAction {
         data object NavigateToOtpTokenScreen: UiAction
+        data class SetSystemAlertWindowPermission(val allowed: Boolean): UiAction
+        data object NavigateToDrawOverOtherAppsPermissionWindow: UiAction
     }
 
     sealed interface SideEffect {
         data class Toast(val text: String): SideEffect
         data object NavigateToOtpTokenScreen: SideEffect
+        data object NavigateToDrawOverOtherAppsPermissionWindow: SideEffect
     }
 }
