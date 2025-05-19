@@ -1,15 +1,15 @@
 package tel.jeelpa.falsecaller.repository.truecaller
 
+import io.michaelrocks.libphonenumber.android.Phonenumber.PhoneNumber
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
-import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import tel.jeelpa.falsecaller.constants.Constants
 import tel.jeelpa.falsecaller.models.CallerInfo
-import tel.jeelpa.falsecaller.models.PhoneNumber
 import tel.jeelpa.falsecaller.repository.CallerInfoService
+import tel.jeelpa.falsecaller.utils.e164Format
 
 class TrueCallerInfoService(
     private val httpClient: OkHttpClient,
@@ -30,7 +30,7 @@ class TrueCallerInfoService(
     }.build()
 
     override suspend fun getDetailsFromNumber(number: PhoneNumber): CallerInfo {
-        val query = number.number
+        val query = number.e164Format
         val request =
             Request.Builder().url("$BASE_URL/v2/search?q=$query&type=4")
                 .get().build()

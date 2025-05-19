@@ -16,8 +16,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import arrow.core.toOption
 import coil3.compose.AsyncImage
+import io.michaelrocks.libphonenumber.android.Phonenumber.PhoneNumber
 import tel.jeelpa.falsecaller.models.CallLogEntry
-import tel.jeelpa.falsecaller.models.PhoneNumber
+import tel.jeelpa.falsecaller.utils.e164Format
 import tel.jeelpa.falsecaller.utils.nullIfBlank
 
 @Composable
@@ -54,12 +55,12 @@ fun CallLogListEntry(
         )
     }
 
-    val headline = data.name.nullIfBlank() ?: data.number.number
+    val headline = data.name.nullIfBlank() ?: data.number.e164Format
 
     ListItem(
         modifier = modifier,
         headlineContent = { Text(headline) },
-        supportingContent = { Text(data.number.number) },
+        supportingContent = { Text(data.number.e164Format) },
         leadingContent = { leadingContent(Modifier
             .size(48.dp)
             .clip(CircleShape)
@@ -73,7 +74,7 @@ fun CallLogListEntry(
 private fun _preview() {
     val a = CallLogEntry(
         name = "",
-        number = PhoneNumber("+911234567890"),
+        number = PhoneNumber(),
         avatarUri = null
     )
     Column {

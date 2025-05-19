@@ -6,15 +6,10 @@ import android.graphics.PixelFormat
 import android.os.Build
 import android.os.IBinder
 import android.view.WindowManager
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Card
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -23,15 +18,18 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.setViewTreeLifecycleOwner
 import androidx.lifecycle.setViewTreeViewModelStoreOwner
 import androidx.savedstate.setViewTreeSavedStateRegistryOwner
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 import tel.jeelpa.falsecaller.R
-import tel.jeelpa.falsecaller.models.PhoneNumber
 import tel.jeelpa.falsecaller.ui.screens.floatingwindow.FloatingWindowScreen
 import tel.jeelpa.falsecaller.ui.theme.FalseCallerTheme
 
 //https://gist.github.com/handstandsam/6ecff2f39da72c0b38c07aa80bbb5a2f
-class OverlayService : Service() {
+class OverlayService : Service(), KoinComponent {
     private lateinit var composeView: ComposeView
     private val windowManager get() = getSystemService(WINDOW_SERVICE) as WindowManager
+    private val phoneNumberUtil: PhoneNumberUtil = get()
 
     private lateinit var number: String
 
@@ -71,7 +69,8 @@ class OverlayService : Service() {
                 ) {
                     FloatingWindowScreen(
                         modifier = Modifier.padding(16.dp),
-                        number = PhoneNumber(number)
+                        // TODO: REGION CODE should be choosable in settings
+                        number = phoneNumberUtil.parse(number, "IN")
                     )
                 }
             }

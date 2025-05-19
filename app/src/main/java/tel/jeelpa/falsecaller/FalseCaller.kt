@@ -11,10 +11,6 @@ class FalseCaller: Application() {
     override fun onCreate() {
         super.onCreate()
 
-//        val a = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
-//        println("SECURE STRING : '$a' ")
-
-
         startKoin {
             androidContext(this@FalseCaller)
             modules(AppModule, OverrideModule)

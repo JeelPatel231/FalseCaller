@@ -26,14 +26,13 @@ import arrow.core.some
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import io.michaelrocks.libphonenumber.android.Phonenumber.PhoneNumber
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 import tel.jeelpa.falsecaller.lifecycle.RepeatOnLifecycle
-import tel.jeelpa.falsecaller.models.CallLogEntry
 import tel.jeelpa.falsecaller.models.CallerInfo
-import tel.jeelpa.falsecaller.models.PhoneNumber
 import tel.jeelpa.falsecaller.models.TriState
 import tel.jeelpa.falsecaller.ui.components.CallerInfoDetails
 import tel.jeelpa.falsecaller.ui.components.EmoticonError
@@ -122,7 +121,7 @@ private fun _detailsLoading() {
     Surface {
         StatelessDetailScreen(
             uiState = UiState(
-                phoneNumber = PhoneNumber(""),
+                phoneNumber = PhoneNumber(),
             ),
             sideEffect = emptyFlow(),
             onAction = {},
@@ -137,7 +136,7 @@ private fun _detailsSuccess() {
     Surface {
         StatelessDetailScreen(
             uiState = UiState(
-                phoneNumber = PhoneNumber(""),
+                phoneNumber = PhoneNumber(),
             ),
             sideEffect = emptyFlow(),
             onAction = {},
@@ -156,7 +155,7 @@ private fun _detailsError() {
     Surface {
         StatelessDetailScreen(
             uiState = UiState(
-                phoneNumber = PhoneNumber(""),
+                phoneNumber = PhoneNumber(),
             ),
             sideEffect = emptyFlow(),
             onAction = {},

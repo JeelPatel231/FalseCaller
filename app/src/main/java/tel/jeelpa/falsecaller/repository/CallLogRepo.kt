@@ -3,19 +3,19 @@ package tel.jeelpa.falsecaller.repository
 import android.content.Context
 import android.provider.CallLog
 import tel.jeelpa.falsecaller.models.CallLogEntry
-import tel.jeelpa.falsecaller.models.PhoneNumber
 import tel.jeelpa.falsecaller.paging.CursorToIterator
 import tel.jeelpa.falsecaller.paging.core.Paginator
 import tel.jeelpa.falsecaller.paging.core.paged
 import tel.jeelpa.falsecaller.paging.core.suspendediterator.emptyPaginator
+import tel.jeelpa.falsecaller.utils.PhoneNumberUtil
 
 interface CallLogRepo {
     fun getAllCallLogs(): Paginator<CallLogEntry>
-    fun filterCallLogsByNumber(number: PhoneNumber): Paginator<CallLogEntry>
+    fun filterCallLogsByNumber(number: String): Paginator<CallLogEntry>
 }
 
 class AndroidCallLogRepo(
-    private val context: Context
+    private val context: Context,
 ) : CallLogRepo {
     private val PAGE_SIZE = 100
     private fun getCallLogs(
@@ -47,10 +47,10 @@ class AndroidCallLogRepo(
 //                val type = it.getInt(it.getColumnIndexOrThrow(CallLog.Calls.TYPE))
             val name = it.getString(it.getColumnIndexOrThrow(CallLog.Calls.CACHED_NAME))
             val url = it.getString(it.getColumnIndexOrThrow(CallLog.Calls.CACHED_PHOTO_URI))
-
+            // TODO: default region should be choosable in settings
             CallLogEntry(
                 name = name,
-                number = PhoneNumber(number),
+                number = PhoneNumberUtil.parse(number, "IN"),
                 avatarUri = url,
             )
         }
@@ -64,9 +64,9 @@ class AndroidCallLogRepo(
             .paged(PAGE_SIZE)
     }
 
-    override fun filterCallLogsByNumber(number: PhoneNumber): Paginator<CallLogEntry> {
+    override fun filterCallLogsByNumber(number: String): Paginator<CallLogEntry> {
         val filterString = "${CallLog.Calls.NUMBER} LIKE ?"
-        val filterArgs = arrayOf("%${number.number}%")
+        val filterArgs = arrayOf("%${number}%")
         return getCallLogs(filterString, filterArgs)
             .asSequence()
             .distinctBy { it.number }
@@ -80,6 +80,6 @@ object EmptyCallLogRepo: CallLogRepo {
     override fun getAllCallLogs(): Paginator<CallLogEntry> =
         emptyPaginator()
 
-    override fun filterCallLogsByNumber(number: PhoneNumber): Paginator<CallLogEntry> =
+    override fun filterCallLogsByNumber(number: String): Paginator<CallLogEntry> =
         emptyPaginator()
 }

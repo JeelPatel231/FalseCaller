@@ -56,6 +56,9 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
 
+    //not used yet
+    implementation("io.michaelrocks:libphonenumber-android:9.0.5")
+
     implementation("com.google.accompanist:accompanist-permissions:0.37.3")
 
 
@@ -64,7 +67,7 @@ dependencies {
 
 //    implementation("androidx.lifecycle:lifecycle-common:2.9.0")
 
-
+    // not used yet
     implementation("androidx.datastore:datastore-preferences:1.0.0")
 
     // TODO: remove this dependency

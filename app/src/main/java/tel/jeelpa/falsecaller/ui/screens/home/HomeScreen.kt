@@ -14,18 +14,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Settings
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -33,31 +30,30 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.traversalIndex
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
+import arrow.core.None
+import arrow.core.Option
+import arrow.core.some
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
-import com.google.accompanist.permissions.shouldShowRationale
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.generated.destinations.DetailScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.SettingsScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
+import io.michaelrocks.libphonenumber.android.Phonenumber.PhoneNumber
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import org.koin.compose.viewmodel.koinViewModel
-import tel.jeelpa.falsecaller.R
 import tel.jeelpa.falsecaller.lifecycle.RepeatOnLifecycle
 import tel.jeelpa.falsecaller.models.CallLogEntry
-import tel.jeelpa.falsecaller.models.PhoneNumber
 import tel.jeelpa.falsecaller.ui.components.CallLogListEntry
 import tel.jeelpa.falsecaller.ui.components.EmoticonError
 import tel.jeelpa.falsecaller.ui.screens.home.HomeContract.SideEffect
@@ -71,6 +67,7 @@ fun HomeScreen(
 ) {
     val viewModel: HomeScreenViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsState()
+    val intermediateCallLogEntry by viewModel.intermediateCallLogEntry.collectAsState()
 
     StatelessHomeScreen(
         navigator = navigator,
@@ -79,6 +76,7 @@ fun HomeScreen(
         onAction = viewModel::onAction,
         callLogs = viewModel.callLogs,
         searchedLogs = viewModel.searchResults,
+        intermediateCallLogEntry = intermediateCallLogEntry,
     )
 }
 
@@ -91,6 +89,7 @@ fun StatelessHomeScreen(
     onAction: (UiAction) -> Unit,
     callLogs: Flow<PagingData<CallLogEntry>>,
     searchedLogs: Flow<PagingData<CallLogEntry>>,
+    intermediateCallLogEntry: Option<CallLogEntry>,
 ) {
     val ctx = LocalContext.current
 
@@ -153,22 +152,17 @@ fun StatelessHomeScreen(
                 LazyColumn {
                     if (uiState.searchQuery.isNotBlank()) {
                         // live edit entry for navigating to info window.
-                        item {
-                            val intermediateCallLogEntry = CallLogEntry(
-                                name = uiState.searchQuery,
-                                number = PhoneNumber(uiState.searchQuery),
-                                avatarUri = null,
-                            )
-                            CallLogListEntry(modifier = Modifier
-                                .clickable {
-                                    onAction(
-                                        UiAction.OnCallLogItemClicked(
-                                            intermediateCallLogEntry
+                        intermediateCallLogEntry.onSome {
+                            item {
+                                CallLogListEntry(modifier = Modifier
+                                    .clickable {
+                                        onAction(
+                                            UiAction.OnCallLogItemClicked(it)
                                         )
-                                    )
-                                    onAction(UiAction.SetExpanded(false))
-                                }
-                                .fillMaxWidth(), data = intermediateCallLogEntry)
+                                        onAction(UiAction.SetExpanded(false))
+                                    }
+                                    .fillMaxWidth(), data = it)
+                            }
                         }
                     }
                     items(searchFilteredItems.itemCount) { idx ->
@@ -244,6 +238,7 @@ private fun _ExpandedSearchBar() {
             onAction = {},
             searchedLogs = emptyFlow(),
             callLogs = emptyFlow(),
+            intermediateCallLogEntry = CallLogEntry("Name", PhoneNumber(), null).some(),
         )
     }
 }
@@ -253,7 +248,7 @@ private fun _ExpandedSearchBar() {
 private fun _HomeScreenDefault() {
     val callLog = (0..10).map {
         CallLogEntry(
-            name = "Person $it", number = PhoneNumber("+$it"), avatarUri = ""
+            name = "Person $it", number = PhoneNumber(), avatarUri = ""
         )
     }
     Surface {
@@ -266,6 +261,7 @@ private fun _HomeScreenDefault() {
             onAction = {},
             searchedLogs = emptyFlow(),
             callLogs = emptyFlow(),
+            intermediateCallLogEntry = None,
         )
     }
 }

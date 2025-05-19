@@ -3,7 +3,7 @@ package tel.jeelpa.falsecaller.ui.screens.floatingwindow
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import arrow.optics.optics
-import tel.jeelpa.falsecaller.models.PhoneNumber
+import io.michaelrocks.libphonenumber.android.Phonenumber.PhoneNumber
 
 interface FloatingWindowContract {
     @optics

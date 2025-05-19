@@ -3,8 +3,8 @@ package tel.jeelpa.falsecaller.ui.screens.home
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import arrow.optics.optics
+import io.michaelrocks.libphonenumber.android.Phonenumber.PhoneNumber
 import tel.jeelpa.falsecaller.models.CallLogEntry
-import tel.jeelpa.falsecaller.models.PhoneNumber
 
 interface HomeContract {
     @optics

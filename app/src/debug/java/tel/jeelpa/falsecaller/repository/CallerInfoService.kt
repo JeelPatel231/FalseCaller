@@ -1,7 +1,7 @@
 package tel.jeelpa.falsecaller.repository
 
+import io.michaelrocks.libphonenumber.android.Phonenumber.PhoneNumber
 import tel.jeelpa.falsecaller.models.CallerInfo
-import tel.jeelpa.falsecaller.models.PhoneNumber
 
 class MockCallerInfoService: CallerInfoService {
     override suspend fun getDetailsFromNumber(number: PhoneNumber): CallerInfo {
