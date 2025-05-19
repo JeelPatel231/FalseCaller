@@ -4,6 +4,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable
 import arrow.optics.optics
 import tel.jeelpa.falsecaller.models.CallLogEntry
+import tel.jeelpa.falsecaller.models.PhoneNumber
 
 interface HomeContract {
     @optics
@@ -33,7 +34,7 @@ interface HomeContract {
 
     sealed interface SideEffect {
         data class Toast(val text: String): SideEffect
-        data class NavigateToDetails(val data: CallLogEntry): SideEffect
+        data class NavigateToDetails(val data: PhoneNumber): SideEffect
         data object NavigateToSetting: SideEffect
     }
 }

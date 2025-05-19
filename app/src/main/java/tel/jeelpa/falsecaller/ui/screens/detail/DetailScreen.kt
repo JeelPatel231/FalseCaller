@@ -45,9 +45,9 @@ import tel.jeelpa.falsecaller.ui.screens.detail.DetailContract.UiState
 @Composable
 fun DetailScreen(
     navigator: DestinationsNavigator,
-    callLogEntry: CallLogEntry,
+    phoneNumber: PhoneNumber,
 ) {
-    val viewModel: DetailScreenViewModel = koinViewModel { parametersOf(callLogEntry) }
+    val viewModel: DetailScreenViewModel = koinViewModel { parametersOf(phoneNumber) }
     val uiState by viewModel.uiState.collectAsState()
     val callerInfo by viewModel.detailsFromTruecaller.collectAsState()
     StatelessDetailScreen(
@@ -122,11 +122,7 @@ private fun _detailsLoading() {
     Surface {
         StatelessDetailScreen(
             uiState = UiState(
-                CallLogEntry(
-                    name = "",
-                    number = PhoneNumber(""),
-                    avatarUri = null
-                )
+                phoneNumber = PhoneNumber(""),
             ),
             sideEffect = emptyFlow(),
             onAction = {},
@@ -141,11 +137,7 @@ private fun _detailsSuccess() {
     Surface {
         StatelessDetailScreen(
             uiState = UiState(
-                CallLogEntry(
-                    name = "",
-                    number = PhoneNumber(""),
-                    avatarUri = null
-                )
+                phoneNumber = PhoneNumber(""),
             ),
             sideEffect = emptyFlow(),
             onAction = {},
@@ -164,11 +156,7 @@ private fun _detailsError() {
     Surface {
         StatelessDetailScreen(
             uiState = UiState(
-                CallLogEntry(
-                    name = "",
-                    number = PhoneNumber(""),
-                    avatarUri = null
-                )
+                phoneNumber = PhoneNumber(""),
             ),
             sideEffect = emptyFlow(),
             onAction = {},

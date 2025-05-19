@@ -12,6 +12,7 @@ import tel.jeelpa.falsecaller.flow.deriveStateIn
 import tel.jeelpa.falsecaller.flow.mapState
 import tel.jeelpa.falsecaller.models.CallLogEntry
 import tel.jeelpa.falsecaller.models.CallerInfo
+import tel.jeelpa.falsecaller.models.PhoneNumber
 import tel.jeelpa.falsecaller.models.TriState
 import tel.jeelpa.falsecaller.mvi.MVI
 import tel.jeelpa.falsecaller.mvi.emitSideEffect
@@ -23,15 +24,15 @@ import tel.jeelpa.falsecaller.ui.screens.detail.DetailContract.UiState
 import tel.jeelpa.falsecaller.utils.logCatch
 
 class DetailScreenViewModel(
-    callLogEntry: CallLogEntry,
+    phoneNumber: PhoneNumber,
     private val callerInfoService: CallerInfoService,
 ) : ViewModel(),
-    MVI<UiState, UiAction, SideEffect> by mvi(UiState(callLogEntry)) {
+    MVI<UiState, UiAction, SideEffect> by mvi(UiState(phoneNumber)) {
 
     val detailsFromTruecaller: StateFlow<TriState<CallerInfo>> = uiState
-        .mapState { it.logEntry }
+        .mapState { it.phoneNumber }
         .map {
-            Either.logCatch { callerInfoService.getDetailsFromNumber(it.number) }
+            Either.logCatch { callerInfoService.getDetailsFromNumber(it) }
                 .onLeft { emitSideEffect(SideEffect.Toast(it.message ?: "Unknown Error")) }
                 .some()
         }

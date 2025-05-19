@@ -52,7 +52,7 @@ class HomeScreenViewModel(
 
     override fun onAction(uiAction: UiAction) {
         when (uiAction) {
-            is UiAction.OnCallLogItemClicked -> emitSideEffect(SideEffect.NavigateToDetails(uiAction.entry))
+            is UiAction.OnCallLogItemClicked -> emitSideEffect(SideEffect.NavigateToDetails(uiAction.entry.number))
             is UiAction.OnQueryChange -> updateUiState {
                 UiState.searchQuery.set(this, uiAction.newQuery)
             }
