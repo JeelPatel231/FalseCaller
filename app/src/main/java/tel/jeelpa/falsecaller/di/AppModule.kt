@@ -22,7 +22,7 @@ val AppModule = module {
     single<OkHttpClient> { OkHttpClient.Builder().build() }
     single<PhoneNumberUtil> { PhoneNumberUtil.createInstance(get<Context>()) }
 
-    single<CallLogRepo>(named("default")) { AndroidCallLogRepo(get<Application>()) }
+    single<CallLogRepo>(named("default")) { AndroidCallLogRepo(get<Application>(),  get()) }
     single<CallLogRepo>(named("empty")) { EmptyCallLogRepo }
 
     // TODO: migrate from shared preferences to data store (honestly, useless and not worth it.)
@@ -34,10 +34,10 @@ val AppModule = module {
     // TODO: fix getting latest token of trucaller
     single<CallerInfoService> {
         val sharedPrefs: SharedPreferences = get()
-        TrueCallerInfoService(get()) { sharedPrefs.getString("TRUECALLER_TOKEN", null)!! }
+        TrueCallerInfoService(get(), get()) { sharedPrefs.getString("TRUECALLER_TOKEN", null)!! }
     }
 
-    viewModel { HomeScreenViewModel(get(named("default")), get(named("empty"))) }
+    viewModel { HomeScreenViewModel(get(named("default")), get(named("empty")), get()) }
     viewModel { DetailScreenViewModel(get(),get()) }
     viewModel { SettingsScreenViewModel() }
     viewModel { FloatingWindowViewModel(get(), get()) }

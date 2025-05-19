@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import arrow.core.Either
 import arrow.core.Option
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,13 +21,13 @@ import tel.jeelpa.falsecaller.repository.CallLogRepo
 import tel.jeelpa.falsecaller.ui.screens.home.HomeContract.SideEffect
 import tel.jeelpa.falsecaller.ui.screens.home.HomeContract.UiAction
 import tel.jeelpa.falsecaller.ui.screens.home.HomeContract.UiState
-import tel.jeelpa.falsecaller.utils.PhoneNumberUtil
 import tel.jeelpa.falsecaller.utils.e164Format
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class HomeScreenViewModel(
     private val androidCallLogRepo: CallLogRepo,
     private val emptyCallLogRepo: CallLogRepo,
+    private val phoneNumberUtil: PhoneNumberUtil,
 ) : ViewModel(),
     MVI<UiState, UiAction, SideEffect> by mvi(UiState.default()) {
 
@@ -48,10 +49,10 @@ class HomeScreenViewModel(
     val intermediateCallLogEntry: StateFlow<Option<CallLogEntry>> = uiState.mapState {
         // TODO: REGION CODE should be choosable in settings
         Either
-            .catch { PhoneNumberUtil.parse(it.searchQuery, "IN") }
+            .catch { phoneNumberUtil.parse(it.searchQuery, "IN") }
             .map {
                 CallLogEntry(
-                    name = it.e164Format,
+                    name = phoneNumberUtil.e164Format(it),
                     number = it,
                     avatarUri = null,
                 )

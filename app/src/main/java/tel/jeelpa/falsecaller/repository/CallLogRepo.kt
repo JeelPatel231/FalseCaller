@@ -2,12 +2,12 @@ package tel.jeelpa.falsecaller.repository
 
 import android.content.Context
 import android.provider.CallLog
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import tel.jeelpa.falsecaller.models.CallLogEntry
 import tel.jeelpa.falsecaller.paging.CursorToIterator
 import tel.jeelpa.falsecaller.paging.core.Paginator
 import tel.jeelpa.falsecaller.paging.core.paged
 import tel.jeelpa.falsecaller.paging.core.suspendediterator.emptyPaginator
-import tel.jeelpa.falsecaller.utils.PhoneNumberUtil
 
 interface CallLogRepo {
     fun getAllCallLogs(): Paginator<CallLogEntry>
@@ -16,6 +16,7 @@ interface CallLogRepo {
 
 class AndroidCallLogRepo(
     private val context: Context,
+    private val phoneNumberUtil: PhoneNumberUtil,
 ) : CallLogRepo {
     private val PAGE_SIZE = 100
     private fun getCallLogs(
@@ -50,7 +51,7 @@ class AndroidCallLogRepo(
             // TODO: default region should be choosable in settings
             CallLogEntry(
                 name = name,
-                number = PhoneNumberUtil.parse(number, "IN"),
+                number = phoneNumberUtil.parse(number, "IN"),
                 avatarUri = url,
             )
         }
