@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.telephony.TelephonyManager
 
 
-// Pre Android 12
+// TODO: Check why does broadcast reciever doesnt wake up app when call arrives.
 class IncomingCallBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         require(intent != null)

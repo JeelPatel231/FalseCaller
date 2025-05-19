@@ -46,7 +46,6 @@ fun CallLogListEntry(
     modifier: Modifier = Modifier,
     data: CallLogEntry
 ) {
-    // TODO: do something about this random inject
     val leadingContent: @Composable (Modifier) -> Unit = { mod ->
         data.avatarUri.toOption().filter { it.isNotBlank() }.fold(
             ifEmpty = { AvatarFromName(modifier = mod, name = data.name) },
