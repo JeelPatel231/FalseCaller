@@ -50,9 +50,10 @@ class HomeScreenViewModel(
         // TODO: REGION CODE should be choosable in settings
         Either
             .catch { phoneNumberUtil.parse(it.searchQuery, "IN") }
+            .map { phoneNumberUtil.e164Format(it) }
             .map {
                 CallLogEntry(
-                    name = phoneNumberUtil.e164Format(it),
+                    name = it,
                     number = it,
                     avatarUri = null,
                 )
@@ -70,7 +71,8 @@ class HomeScreenViewModel(
 
     override fun onAction(uiAction: UiAction) {
         when (uiAction) {
-            is UiAction.OnCallLogItemClicked -> emitSideEffect(SideEffect.NavigateToDetails(uiAction.entry.number))
+            // TODO: REGION CODE should be choosable in settings
+            is UiAction.OnCallLogItemClicked -> emitSideEffect(SideEffect.NavigateToDetails(phoneNumberUtil.parse(uiAction.entry.number, "IN")))
             is UiAction.OnQueryChange -> updateUiState {
                 UiState.searchQuery.set(this, uiAction.newQuery)
             }

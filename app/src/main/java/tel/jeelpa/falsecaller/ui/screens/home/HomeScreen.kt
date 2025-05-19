@@ -48,7 +48,6 @@ import com.ramcosta.composedestinations.generated.destinations.DetailScreenDesti
 import com.ramcosta.composedestinations.generated.destinations.SettingsScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
-import io.michaelrocks.libphonenumber.android.Phonenumber.PhoneNumber
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import org.koin.compose.viewmodel.koinViewModel
@@ -238,7 +237,7 @@ private fun _ExpandedSearchBar() {
             onAction = {},
             searchedLogs = emptyFlow(),
             callLogs = emptyFlow(),
-            intermediateCallLogEntry = CallLogEntry("Name", PhoneNumber(), null).some(),
+            intermediateCallLogEntry = CallLogEntry("Name", "+15555555555", null).some(),
         )
     }
 }
@@ -248,7 +247,7 @@ private fun _ExpandedSearchBar() {
 private fun _HomeScreenDefault() {
     val callLog = (0..10).map {
         CallLogEntry(
-            name = "Person $it", number = PhoneNumber(), avatarUri = ""
+            name = "Person $it", number = "+15555555555", avatarUri = ""
         )
     }
     Surface {

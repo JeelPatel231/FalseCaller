@@ -22,7 +22,7 @@ val AppModule = module {
     single<OkHttpClient> { OkHttpClient.Builder().build() }
     single<PhoneNumberUtil> { PhoneNumberUtil.createInstance(get<Context>()) }
 
-    single<CallLogRepo>(named("default")) { AndroidCallLogRepo(get<Application>(),  get()) }
+    single<CallLogRepo>(named("default")) { AndroidCallLogRepo(get<Application>()) }
     single<CallLogRepo>(named("empty")) { EmptyCallLogRepo }
 
     // TODO: migrate from shared preferences to data store (honestly, useless and not worth it.)

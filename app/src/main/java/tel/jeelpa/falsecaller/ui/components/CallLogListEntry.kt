@@ -16,11 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import arrow.core.toOption
 import coil3.compose.AsyncImage
-import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
-import io.michaelrocks.libphonenumber.android.Phonenumber.PhoneNumber
-import org.koin.compose.koinInject
 import tel.jeelpa.falsecaller.models.CallLogEntry
-import tel.jeelpa.falsecaller.utils.e164Format
 import tel.jeelpa.falsecaller.utils.nullIfBlank
 
 @Composable
@@ -51,7 +47,6 @@ fun CallLogListEntry(
     data: CallLogEntry
 ) {
     // TODO: do something about this random inject
-    val phoneNumberUtil: PhoneNumberUtil = koinInject()
     val leadingContent: @Composable (Modifier) -> Unit = { mod ->
         data.avatarUri.toOption().filter { it.isNotBlank() }.fold(
             ifEmpty = { AvatarFromName(modifier = mod, name = data.name) },
@@ -59,7 +54,7 @@ fun CallLogListEntry(
         )
     }
 
-    val numberString = phoneNumberUtil.e164Format(data.number)
+    val numberString = data.number
     val headline = data.name.nullIfBlank() ?: numberString
 
     ListItem(
@@ -79,7 +74,7 @@ fun CallLogListEntry(
 private fun _preview() {
     val a = CallLogEntry(
         name = "",
-        number = PhoneNumber(),
+        number = "+15555555555",
         avatarUri = null
     )
     Column {
