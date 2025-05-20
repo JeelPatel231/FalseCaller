@@ -5,7 +5,7 @@ import kotlinx.serialization.json.JsonArray
 
 @Serializable
 data class SearchResponse(
-    val data: List<Datum>? = null
+    val data: List<Datum>,
 ) {
 
     @Serializable
@@ -16,15 +16,15 @@ data class SearchResponse(
         val score: Double? = null,
         val access: String? = null,
         val enhanced: Boolean? = null,
-        val phones: List<Phone>? = null,
-        val addresses: List<Address>? = null,
-        val internetAddresses: List<InternetAddress>? = null,
-        val badges: List<String>? = null,
+        val phones: List<Phone> = emptyList(),
+        val addresses: List<Address> = emptyList(),
+        val internetAddresses: List<InternetAddress> = emptyList(),
+        val badges: List<String> = emptyList(),
         val tags: JsonArray? = null,
         val cacheTtl: Long? = null,
         val sources: JsonArray? = null,
-        val searchWarnings: List<SearchWarning>? = null,
-        val surveys: List<Survey>? = null,
+        val searchWarnings: List<SearchWarning> = emptyList(),
+        val surveys: List<Survey>? = emptyList(),
         val commentsStats: CommentsStats? = null,
         val senderId: SenderId? = null,
         val manualCallerIdPrompt: Boolean? = null,
@@ -32,7 +32,7 @@ data class SearchResponse(
         val spamInfo: SpamInfo? = null,
         val imId: String? = null,
         val gender: String? = null,
-        val image: String? = null
+        val image: String? = null,
     )
 
     @Serializable
@@ -86,8 +86,8 @@ data class SearchResponse(
 
     @Serializable
     data class SenderId(
-        val spamScore: Long? = null,
-        val fraudScore: Long? = null,
+        val spamScore: Double? = null,
+        val fraudScore: Double? = null,
         val isNewSender: Boolean? = null,
         val isFraudExcluded: Boolean? = null,
         val isValidSpamScore: Boolean? = null,
@@ -96,10 +96,10 @@ data class SearchResponse(
 
     @Serializable
     data class SpamInfo(
-        val spamScore: Long? = null,
+        val spamScore: Double? = null,
         val spamType: String? = null,
         val spamStats: SpamStats? = null,
-        val spamCategories: List<Long>? = null,
+        val spamCategories: List<Long> = emptyList(),
         val spamVersion: Long? = null
     )
 
@@ -108,15 +108,15 @@ data class SearchResponse(
         val numReports: Long? = null,
         val numReports60Days: Long? = null,
         val numSearches60Days: Long? = null,
-        val numCallsHourly: List<Long>? = null,
+        val numCallsHourly: List<Long> = emptyList(),
         val numCalls60Days: Long? = null,
         val numCallsNotAnswered: Long? = null,
         val numCallsAnswered: Long? = null,
-        val topSpammedCountries: List<TopSpammedCountry>? = null,
+        val topSpammedCountries: List<TopSpammedCountry> = emptyList(),
         val numMessages60Days: Long? = null,
         val numCalls60DaysPointerPosition: Long? = null,
         val spammerType: String? = null,
-        val numMessagesHourly: List<Long>? = null,
+        val numMessagesHourly: List<Long> = emptyList(),
         val numMessages60DaysPointerPosition: Long? = null
     )
 
