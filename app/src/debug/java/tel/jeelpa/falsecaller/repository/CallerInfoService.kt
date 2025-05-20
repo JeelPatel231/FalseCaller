@@ -9,6 +9,7 @@ class MockCallerInfoService: CallerInfoService {
             name = "John Doe",
             spamScore = 0.0,
             score = 0.0,
+            number = number,
         )
     }
 }

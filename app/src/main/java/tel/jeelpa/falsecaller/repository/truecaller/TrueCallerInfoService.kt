@@ -48,6 +48,7 @@ class TrueCallerInfoService(
                     name = bestMatch.name ?: bestMatch.altName ?: "Unknown Name",
                     score = bestMatch.score ?: 0.0,
                     spamScore = bestMatch.spamInfo?.spamScore?.toDouble() ?: 0.0,
+                    number = number,
                 )
             }
         }

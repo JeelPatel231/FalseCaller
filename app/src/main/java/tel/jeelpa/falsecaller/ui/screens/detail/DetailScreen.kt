@@ -144,6 +144,7 @@ private fun _detailsSuccess() {
                 name = "John Doe",
                 score = 0.0,
                 spamScore = 0.0,
+                number = PhoneNumber()
             ).right().some(),
         )
     }

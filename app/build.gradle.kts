@@ -2,7 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("com.google.devtools.ksp") version "2.1.20-2.0.0"
+    id("com.google.devtools.ksp") version "2.0.0-1.0.22"
+//    id("com.google.devtools.ksp") version "2.1.20-2.0.0"
     id("kotlin-parcelize")
     kotlin("plugin.serialization") version "2.1.20"
 }
@@ -61,6 +62,9 @@ dependencies {
 
     implementation("com.google.accompanist:accompanist-permissions:0.37.3")
 
+    val room_version = "2.7.1"
+    implementation("androidx.room:room-runtime:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
 
 //    implementation("androidx.lifecycle:lifecycle-service:2.9.0")
 //    implementation("androidx.savedstate:savedstate-ktx:1.3.0")
