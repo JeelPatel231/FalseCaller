@@ -36,17 +36,20 @@ class TrueCallerInfoService(
         val request =
             Request.Builder().url("$BASE_URL/v2/search?q=$query&type=4")
                 .get().build()
-        withContext(Dispatchers.IO) { client.newCall(request).execute() }.use { response ->
-            val responseText = response.body!!.string()
-            if (!response.isSuccessful) throw IllegalStateException(responseText)
-            val searchResponse: SearchResponse = JsonDecoder.decodeFromString(responseText)
+        return withContext(Dispatchers.IO) { 
+            client.newCall(request).execute().use { response ->
+                val responseText = response.body!!.string()
+                if (!response.isSuccessful) throw IllegalStateException(responseText)
+                val searchResponse: SearchResponse = JsonDecoder.decodeFromString(responseText)
 
-            val bestMatch = searchResponse.data!!.first()
-            return CallerInfo(
-                name = bestMatch.name ?: bestMatch.altName ?: "Unknown Name",
-                score = bestMatch.score ?: 0.0,
-                spamScore = bestMatch.spamInfo?.spamScore?.toDouble() ?: 0.0,
-            )
+                val bestMatch = searchResponse.data!!.first()
+
+                CallerInfo(
+                    name = bestMatch.name ?: bestMatch.altName ?: "Unknown Name",
+                    score = bestMatch.score ?: 0.0,
+                    spamScore = bestMatch.spamInfo?.spamScore?.toDouble() ?: 0.0,
+                )
+            }
         }
     }
 }
