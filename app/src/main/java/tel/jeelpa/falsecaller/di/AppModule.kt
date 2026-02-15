@@ -3,6 +3,7 @@ package tel.jeelpa.falsecaller.di
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.icu.util.Calendar
 import androidx.room.Room
 import io.michaelrocks.libphonenumber.android.PhoneNumberUtil
 import okhttp3.OkHttpClient
@@ -10,6 +11,8 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import tel.jeelpa.falsecaller.constants.Constants
+import tel.jeelpa.falsecaller.constants.DEVICE_LIST
+import tel.jeelpa.falsecaller.constants.Device
 import tel.jeelpa.falsecaller.repository.AndroidCallLogRepo
 import tel.jeelpa.falsecaller.repository.CallLogRepo
 import tel.jeelpa.falsecaller.repository.CallerInfoService
@@ -55,9 +58,25 @@ val AppModule = module {
         RoomCachedCallerInfoService(db.callerDao(), remoteRepo)
     }
 
+    single<Device> {
+        // select a random device based on the current day hash, so that it doesnt change too frequently
+        // only needed for OTP flow
+        val calendar = Calendar.getInstance()
+
+        // A simple number based on current date to index into an array
+        val dateInt =
+            calendar.get(Calendar.YEAR) * 10000 +
+            calendar.get(Calendar.MONTH) * 100 +
+            calendar.get(Calendar.DAY_OF_MONTH)
+
+        val index = dateInt % DEVICE_LIST.size
+
+        DEVICE_LIST[index]
+    }
+
     viewModel { HomeScreenViewModel(get(named("default")), get(named("empty")), get()) }
     viewModel { DetailScreenViewModel(get(),get()) }
     viewModel { SettingsScreenViewModel() }
     viewModel { FloatingWindowViewModel(get(), get()) }
-    viewModel { OtpLoginViewModel(get()) }
+    viewModel { OtpLoginViewModel(get(), get()) }
 }

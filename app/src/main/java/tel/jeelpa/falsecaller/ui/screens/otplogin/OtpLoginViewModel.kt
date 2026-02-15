@@ -19,6 +19,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import tel.jeelpa.falsecaller.constants.Constants
+import tel.jeelpa.falsecaller.constants.Device
 
 
 typealias TokenString = String
@@ -79,7 +80,7 @@ data class SendOtpRequest(
     )
 
     companion object {
-        fun default(plainNumber: String): SendOtpRequest {
+        fun default(plainNumber: String, manufacturer: String, model: String): SendOtpRequest {
             return SendOtpRequest(
                 countryCode = "IN",
                 dialingCode = 91,
@@ -93,8 +94,8 @@ data class SendOtpRequest(
                     device = Device(
                         deviceId = generateFakeAndroidId(),
                         language = "en",
-                        manufacturer = "Google",
-                        model = "sdk_gphone64_x86_64",
+                        manufacturer = manufacturer,
+                        model = model,
                         osName = "Android",
                         osVersion = "10",
                         mobileServices = listOf("GMS"),
@@ -139,22 +140,21 @@ data class VerifiedResponse(
 
 class OtpLoginViewModel(
     private val okHttpClient: OkHttpClient,
-): ViewModel(),
+    private val randomDevice: Device,
+) : ViewModel(),
     MVI<UiState, UiAction, SideEffect> by mvi(UiState.default()) {
 
     private val laxJson = Json { ignoreUnknownKeys = true }
 
-    private fun generateFakeAndroidId(): String {
-        val chars = "0123456789abcdef"
-        return (1..16)
-            .map { chars.random() }
-            .joinToString("")
-    }
-
     private suspend fun sendOtpToNumber(phoneNumber: String): SendOtpResponse {
+        // TODO: Handle country code and number through phone number parsing
         val countryCode = "IN"
         val dialingCode = 91
-        val data = SendOtpRequest.default(phoneNumber)
+        val data = SendOtpRequest.default(
+            phoneNumber,
+            randomDevice.manufacturer,
+            randomDevice.model
+        )
 
         val POST_URL = "https://account-asia-south1.truecaller.com/v2/sendOnboardingOtp"
         val JSON = "application/json; charset=UTF-8".toMediaType()
@@ -176,7 +176,8 @@ class OtpLoginViewModel(
         println(string)
         if (!response.isSuccessful) throw IllegalStateException(string)
 
-        return laxJson.decodeFromString<SendOtpResponse>(string).also { println("OTP RESPONSE: $it") }
+        return laxJson.decodeFromString<SendOtpResponse>(string)
+            .also { println("OTP RESPONSE: $it") }
     }
 
     private suspend fun exchangeOtpForToken(
@@ -246,7 +247,8 @@ class OtpLoginViewModel(
             is UiAction.VerifyOtp -> viewModelScope.launch {
                 updateUiState { UiState.step.set(this, OtpLoginContract.Step.Verification) }
                 try {
-                    val token = exchangeOtpForToken(uiAction.number, uiAction.otp, uiAction.sendOtpResponse)
+                    val token =
+                        exchangeOtpForToken(uiAction.number, uiAction.otp, uiAction.sendOtpResponse)
                     emitSideEffect(SideEffect.StoreTokenInSharedPrefs(token))
                 } catch (e: Throwable) {
                     e.printStackTrace()
