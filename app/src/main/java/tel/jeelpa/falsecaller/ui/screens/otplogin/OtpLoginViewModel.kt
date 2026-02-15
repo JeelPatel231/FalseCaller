@@ -120,6 +120,12 @@ data class VerificationRequest(
 )
 
 @Serializable
+data class BaseResponse(
+    val status: Long,
+    val message: String,
+)
+
+@Serializable
 data class VerifiedResponse(
     val status: Long,
     val message: String,
@@ -176,6 +182,10 @@ class OtpLoginViewModel(
         println(string)
         if (!response.isSuccessful) throw IllegalStateException(string)
 
+        val baseProperties = laxJson.decodeFromString<BaseResponse>(string)
+
+        if (baseProperties.status != 2L) throw RuntimeException(baseProperties.message)
+
         return laxJson.decodeFromString<SendOtpResponse>(string)
             .also { println("OTP RESPONSE: $it") }
     }
@@ -208,6 +218,9 @@ class OtpLoginViewModel(
         val responseText = response.body!!.string()
         println(responseText)
         if (!response.isSuccessful) throw IllegalStateException(responseText)
+
+        val baseProperties = laxJson.decodeFromString<BaseResponse>(responseText)
+        if (baseProperties.status != 2L) throw RuntimeException(baseProperties.message)
 
         val decoded = laxJson.decodeFromString<VerifiedResponse>(responseText)
             .also { println("VERIFIED RESPONSE: $it") }

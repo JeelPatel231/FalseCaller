@@ -127,7 +127,7 @@ fun StatelessOtpLoginScreen(
                     onAction(UiAction.PhoneNumberFieldChanged(newText))
                 },
                 label = { Text("Phone Number") },
-                placeholder = { Text("+919912345678") },
+                placeholder = { Text("9912345678 (without country code)") },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = uiState.step == OtpLoginContract.Step.PhoneNumber
             )
