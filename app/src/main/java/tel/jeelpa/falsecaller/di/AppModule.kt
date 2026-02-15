@@ -9,6 +9,7 @@ import okhttp3.OkHttpClient
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import tel.jeelpa.falsecaller.constants.Constants
 import tel.jeelpa.falsecaller.repository.AndroidCallLogRepo
 import tel.jeelpa.falsecaller.repository.CallLogRepo
 import tel.jeelpa.falsecaller.repository.CallerInfoService
@@ -20,6 +21,7 @@ import tel.jeelpa.falsecaller.repository.truecaller.TrueCallerInfoService
 import tel.jeelpa.falsecaller.ui.screens.detail.DetailScreenViewModel
 import tel.jeelpa.falsecaller.ui.screens.floatingwindow.FloatingWindowViewModel
 import tel.jeelpa.falsecaller.ui.screens.home.HomeScreenViewModel
+import tel.jeelpa.falsecaller.ui.screens.otplogin.OtpLoginViewModel
 import tel.jeelpa.falsecaller.ui.screens.settings.SettingsScreenViewModel
 
 val AppModule = module {
@@ -46,7 +48,7 @@ val AppModule = module {
     single<CallerInfoService> {
         val sharedPrefs: SharedPreferences = get()
         val remoteRepo = TrueCallerInfoService(get(), get()) {
-            sharedPrefs.getString("TRUECALLER_TOKEN", null)
+            sharedPrefs.getString(Constants.PreferenceKey.Token, null)
                 ?: error("Truecaller Token not available.")
         }
         val db: AppDatabase = get()
@@ -57,4 +59,5 @@ val AppModule = module {
     viewModel { DetailScreenViewModel(get(),get()) }
     viewModel { SettingsScreenViewModel() }
     viewModel { FloatingWindowViewModel(get(), get()) }
+    viewModel { OtpLoginViewModel(get()) }
 }

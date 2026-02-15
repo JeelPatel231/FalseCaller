@@ -36,6 +36,7 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
+import com.ramcosta.composedestinations.generated.destinations.OtpLoginScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.navigation.EmptyDestinationsNavigator
 import kotlinx.coroutines.flow.Flow
@@ -44,6 +45,7 @@ import me.zhanghai.compose.preference.ProvidePreferenceLocals
 import me.zhanghai.compose.preference.getPreferenceFlow
 import me.zhanghai.compose.preference.textFieldPreference
 import org.koin.compose.viewmodel.koinViewModel
+import tel.jeelpa.falsecaller.constants.Constants
 import tel.jeelpa.falsecaller.lifecycle.RepeatOnLifecycle
 import tel.jeelpa.falsecaller.ui.screens.settings.SettingsContract.SideEffect
 import tel.jeelpa.falsecaller.ui.screens.settings.SettingsContract.UiAction
@@ -122,12 +124,21 @@ fun StatelessSettingsScreen(
                     .fillMaxSize()
             ) {
                 textFieldPreference(
-                    key = "TRUECALLER_TOKEN",
+                    key = Constants.PreferenceKey.Token,
                     title = { Text("Truecaller Token") },
                     summary = { Text("Directly paste TrueCaller's API token fetched from 3rd party.") },
                     defaultValue = "",
                     textToValue = { it },
                 )
+                item {
+                    ListItem(
+                        modifier = Modifier.clickable {
+                            onAction(UiAction.ClickedNavigateToOtpLoginScreen)
+                        },
+                        headlineContent = { Text("Login with Phone Number") },
+                        supportingContent = { Text("If you don't have a token or cant get one, use your phone number to login easily.") },
+                    )
+                }
                 item {
                     ListItem(
                         modifier = Modifier.clickable {
@@ -166,6 +177,7 @@ fun StatelessSettingsScreen(
         sideEffect.collect {
             when (it) {
                 is SideEffect.Toast -> Toast.makeText(ctx, it.text, Toast.LENGTH_SHORT).show()
+                SideEffect.NavigateToOtpLoginScreen -> navigator.navigate(OtpLoginScreenDestination)
                 SideEffect.NavigateToDrawOverOtherAppsPermissionWindow -> {
                     launcher.launch(
                         Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)

@@ -21,6 +21,7 @@ class SettingsScreenViewModel : ViewModel(),
             is UiAction.SetPhonePermission -> updateUiState {
                 UiState.isPhonePermissionGranted.set(this, uiAction.allowed)
             }
+            is UiAction.ClickedNavigateToOtpLoginScreen -> emitSideEffect(SideEffect.NavigateToOtpLoginScreen)
         }
     }
 }
